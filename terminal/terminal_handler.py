@@ -57,7 +57,19 @@ class TerminalHandler:
         return "Type to start..."
         
     def draw_overlay(self):
-        # can you just get the final string here? for now use a hardcoded string and deal with it later
+        """Filter that adds overlay to the bottom of terminal
+
+            Returns:
+                Text in bottom line of terminal describing costs of the current input
+        """
+        ### ANSI CODES:
+        ### ESC is \x1b in hex. So ESC 7 will be \x1b7 to save cursor position.
+        ### ESC[#B to move cursor down # lines
+        ### ESC 7 save cursor position
+        ### ESC 8 mvoe cursor to last saved position
+        ### ref https://stackoverflow.com/questions/11023929/using-the-alternate-screen-in-a-bash-script
+        ### ref https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+
         text = self.get_overlay_data()
 
         # get terminal dimensions to get to last row
@@ -79,28 +91,3 @@ class TerminalHandler:
             sys.stdout.flush()
 
         threading.Timer(0.2, self.draw_overlay).start()
-
-
-    def overlay(self, buffer_handler: BufferHandler, data) -> bytes:
-        """Filter that adds overlay to the bottom of terminal
-
-            Returns:
-                Text in bottom line of terminal describing costs of the current input
-        """
-        ### ANSI CODES:
-        ### ESC is \x1b in hex. So ESC 7 will be \x1b7 to save cursor position.
-        ### ESC[#B to move cursor down # lines
-        ### ESC 7 save cursor position
-        ### ESC 8 mvoe cursor to last saved position
-        ### ref https://stackoverflow.com/questions/11023929/using-the-alternate-screen-in-a-bash-script
-        ### ref https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-
-        # in alt screen
-        if '\x1b[I'.encode('utf-8') in data:
-            self.in_alt_screen = True
-
-        # in our screen
-        if '\x1b[O'.encode('utf-8') in data:
-            self.in_alt_screen = False
-
-        return data

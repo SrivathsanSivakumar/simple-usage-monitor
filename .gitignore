@@ -212,5 +212,6 @@ build
 npm-debug.log
 .env
 .DS_Store
+tokens/node_modules
 
 tmp/

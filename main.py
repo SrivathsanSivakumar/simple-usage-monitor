@@ -7,7 +7,6 @@ sys.path.insert(1, os.path.join(sys.path[0], ''))
 from terminal.buffer_handler import BufferHandler
 from terminal.terminal_handler import TerminalHandler
 
-
 CLAUDE_BIN = os.getenv('CLAUDE_BIN', '/opt/homebrew/bin/claude')
 
 def main():
@@ -19,14 +18,7 @@ def main():
     signal.signal(signal.SIGWINCH, th.on_resize)
 
     # launch claude and give it full control
-    p.interact(
-        input_filter=bh.calculate_tokens,
-        # output_filter=lambda data: th.overlay(bh, data)
-    )
+    p.interact(input_filter=bh.calculate_tokens,)
 
 if __name__ == "__main__":
     main()
-
-    # with open('/Users/sri/Desktop/MorePrompts/tmp/token_debug.log', 'a') as file:
-#     file.write(f"Tokens: {tokens} | Cost: {dollar_cost:.6f} | Tier: {tier}")
-#     file.flush()

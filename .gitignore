@@ -214,4 +214,4 @@ npm-debug.log
 .DS_Store
 tokens/node_modules
 
-tmp/
+tmp

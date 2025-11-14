@@ -3,10 +3,8 @@
 # calculate tokens and dollar cost for user input in real-time
 # uses Anthropic's pricing table
 
-from __future__ import annotations
-import os, json, socket, shutil, subprocess
+import os, shutil, subprocess
 
-SOCK_PATH  = os.path.expanduser(os.getenv('SOCK_PATH', '~/.cache/claude_tokend.sock'))
 SONNET_INPUT_TIER_BREAK=200000
 SONNET_INPUT_PRICE_LE_200K=3.00
 SONNET_INPUT_PRICE_GT_200K=6.00
@@ -22,15 +20,23 @@ TOKEN_COUNTER_JS = os.path.join(
 
 _node_path = shutil.which("node")
 
-def _count_via_node(text:str):
+def _count_via_node(text: str) -> int:
+    """Calculate tokens for user input using anthropic tokenizer
+
+        Args:
+            text: cleaned user input (buffer)
+        
+        Returns:
+            int: token count for user input
+    """
     if not _node_path or not os.path.exists(TOKEN_COUNTER_JS):
-        return str(-1)
+        return -1
     try:
         p = subprocess.Popen(
             [_node_path, TOKEN_COUNTER_JS],
             stdin=subprocess.PIPE, 
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            # stderr=subprocess.PIPE
         )
         out, err = p.communicate(text.encode(), timeout=0.4)
         return int((out.decode().strip() or "0"))
@@ -38,7 +44,16 @@ def _count_via_node(text:str):
     except Exception as e:
         return e
 
-def count_tokens(text:str) -> int:
+### TODO: Have backup token counting mechanism and add support for future tokenizers here
+def count_tokens(text: str) -> int:
+    """Parent method that calculates tokens
+
+        Args:
+            text: cleaned user input (buffer)
+        
+        Returns:
+            int: token count for user input
+    """
     t = _count_via_node(text)
     if t is not None: 
         return t

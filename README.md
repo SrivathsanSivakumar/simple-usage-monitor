@@ -10,9 +10,13 @@ Clone the repo
 
 `git clone https://github.com/SrivathsanSivakumar/MorePrompts`
 
-Then from anywhere, run
+Then install the tool
 
-`python3 path/to/MorePrompts/main.py`
+`cd path/to/MorePrompts`
+ 
+ `pip install -e .`
+
+ Then run the tool from anywhere by calling `moreprompts` on your terminal
 
 # Contributions
 Open for contributions! Take a look at issues to get started.

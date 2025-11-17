@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moreprompts"
+version = "0.1.0"
+dependencies = [
+  "pexpect"
+]
+requires-python = ">=3.10"
+description = "CLI AI Agent wrapper with token and cost tracking"
+license = "MIT"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+moreprompts = "main:main"

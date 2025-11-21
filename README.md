@@ -1,4 +1,4 @@
-# MorePrompts
+# simple-usage-monitor
 ### CLI Tool - real-time token and cost estimator that lives in your terminal for Claude Code
 
 - Know your token and dollar cost in __real-time__ as your type your prompts, in the same terminal, so you know how many tokens and associated cost your input uses

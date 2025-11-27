@@ -1,24 +1,19 @@
-### Manages the terminal and fetches user input to pass to backend
-
-### Consider starting a new thread to write the overlay separately
+### Manages the terminal and displays token usage so far
 
 import os, sys, fcntl, termios, struct
 sys.path.insert(1, os.path.join(sys.path[0], ''))
-from terminal.buffer_handler import BufferHandler
-from tokens.token_cost_estimator import count_tokens, input_cost_usd;
 import threading
+from data.total_calculator import TotalCalculator
 
 class TerminalHandler:
     """Handler for managing terminal and drawing overlays"""
     
-    def __init__(self, buffer_handler: BufferHandler, pexpect_obj) -> None:
+    def __init__(self, total_calculator: TotalCalculator, pexpect_obj) -> None:
         self.in_alt_screen = False # to know when to draw in terminal        
-        self.buffer_handler = buffer_handler
         self.p = pexpect_obj
-
+        self.total_calculator = total_calculator
         self.overlay_thread = threading.Thread(target=self.draw_overlay, daemon=True)
         self.overlay_thread.start()
-        self.overlay_thread.join()
 
     def get_terminal_size(self) -> int:
         """Get terminal size
@@ -42,16 +37,14 @@ class TerminalHandler:
             self.p.setwinsize(*self.get_terminal_size())
 
     def get_overlay_data(self) -> str:
-        """Pass user input to backend and get token and dollar cost
+        """Fetch total usage metrics for the current session
 
             Returns:
-                Formatted string that contains (Model | Token cost | $ cost)
+                Formatted string that contains (Model | Input tokens, cost | Output tokens, cost)
         """
-        usr_input = self.buffer_handler.buffer
-        if usr_input:
-            tokens = count_tokens(usr_input)
-            dollar_cost, tier = input_cost_usd(tokens)
-            return f"Tokens: {tokens} | Cost: ${dollar_cost:.6f} | Tier: {tier}"
+        usage_data = self.total_calculator.calculate_totals()
+        if usage_data:
+            return f"Input: Tokens - {usage_data[0]}, Cost - ${usage_data[1]:.6f} | Output: Tokens - {usage_data[2]}, Cost - ${usage_data[1]:.6f}"
         return "Type to start..."
         
     def draw_overlay(self):
@@ -79,13 +72,13 @@ class TerminalHandler:
             # cursor manipulation and adding text
             overlay_bytes = (
                 # b'\x1b[0J' +
-                '\x1b[s'            # save cursor position
-                f'\x1b[{rows};1H' +   # move to last row
-                '\x1b[K' +         # clear the entire line
-                text +              # write the text onto the line
-                '\x1b[u'            # move cursor to saved position
+                '\x1b[s'             # save cursor position
+                f'\x1b[{rows};1H' +  # move to last row
+                '\x1b[K' +           # clear the entire line
+                text +               # write the text onto the line
+                '\x1b[u'             # move cursor to saved position
             )
             sys.stdout.write(overlay_bytes)
             sys.stdout.flush()
 
-        threading.Timer(0.5, self.draw_overlay).start()
+        threading.Timer(0.75, self.draw_overlay).start()

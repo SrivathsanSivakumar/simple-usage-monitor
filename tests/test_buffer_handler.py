@@ -2,6 +2,12 @@
 
 from terminal.buffer_handler import BufferHandler
 
+### Deprecated! 
+### This file is going out of use as the project's direction 
+### is making a minor change and tokens can be read from 
+### claude's jsonl files
+
+'''
 def test_enter():
     bh = BufferHandler()
     bh.buffer = 'test'
@@ -51,3 +57,4 @@ def test_get_clean_buffer():
     usr_input = 'test'.encode('utf-8')
     ret = bh.get_clean_buffer(usr_input)
     assert ret == usr_input
+'''

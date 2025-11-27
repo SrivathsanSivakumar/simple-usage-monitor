@@ -2,7 +2,7 @@
 
 import pytest
 from unittest.mock import patch, Mock
-from tokens.token_cost_estimator import count_via_node, count_tokens, input_cost_usd
+from token_cost_estimator import count_via_node, count_tokens, input_cost_usd
 
 def test_count_via_node():
     num_tokens = count_via_node('test')

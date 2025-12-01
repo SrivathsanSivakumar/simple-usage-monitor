@@ -1,6 +1,8 @@
 ### Manages the terminal and displays token usage so far
 
 import os, sys, fcntl, termios, struct
+
+from data.log_reader import LogReader
 sys.path.insert(1, os.path.join(sys.path[0], ''))
 import threading
 from data.total_calculator import TotalCalculator
@@ -8,10 +10,10 @@ from data.total_calculator import TotalCalculator
 class TerminalHandler:
     """Handler for managing terminal and drawing overlays"""
     
-    def __init__(self, total_calculator: TotalCalculator, pexpect_obj) -> None:
+    def __init__(self, log_reader: LogReader, pexpect_obj) -> None:
         self.in_alt_screen = False # to know when to draw in terminal        
         self.p = pexpect_obj
-        self.total_calculator = total_calculator
+        self.log_reader = log_reader
         self.overlay_thread = threading.Thread(target=self.draw_overlay, daemon=True)
         self.overlay_thread.start()
 
@@ -42,9 +44,11 @@ class TerminalHandler:
             Returns:
                 Formatted string that contains (Model | Input tokens, cost | Output tokens, cost)
         """
-        usage_data = self.total_calculator.calculate_totals()
+        session_data = self.log_reader.parse_json_files()
+        total_calculator = TotalCalculator(session_data=session_data)
+        usage_data = total_calculator.calculate_totals()
         if usage_data:
-            return f"Input: Tokens - {usage_data[0]}, Cost - ${usage_data[1]:.6f} | Output: Tokens - {usage_data[2]}, Cost - ${usage_data[1]:.6f}"
+            return f"Input: Tokens - {usage_data[0]}, Cost - ${usage_data[1]:.6f} | Output: Tokens - {usage_data[2]}, Cost - ${usage_data[3]:.6f}"
         return "Type to start..."
         
     def draw_overlay(self):

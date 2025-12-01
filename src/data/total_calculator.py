@@ -3,7 +3,6 @@
 from typing import List
 from data.log_reader import UsageData
 
-
 class TotalCalculator:
     """Calculates total usage metrics for session and sends it to TerminalHandler"""
     def __init__(self, session_data: List[UsageData]):

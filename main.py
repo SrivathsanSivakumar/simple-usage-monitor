@@ -12,15 +12,10 @@ def main():
     CLAUDE_BIN = shutil.which('claude')
     if not CLAUDE_BIN:
         print("Error: Claude Code not found. Please install it or point CLAUDE_BIN at correct path")
+        
     p = pexpect.spawn(CLAUDE_BIN, encoding='utf-8')
-
     log_reader = LogReader()
-    session_data = log_reader.parse_json_files()
-
-    total_calculator = TotalCalculator(session_data=session_data)
-    total_calculator.calculate_totals()
-
-    th = TerminalHandler(total_calculator=total_calculator, pexpect_obj=p)
+    th = TerminalHandler(log_reader=log_reader, pexpect_obj=p)
 
     p.setwinsize(*th.get_terminal_size()) # set terminal size on launch
     signal.signal(signal.SIGWINCH, th.on_resize)

@@ -85,6 +85,10 @@ class UsageData:
 
 class LogReader:
     """Reads relevant jsonl files and creates a set of valid tokens to use for calculations"""
+    def __init__(self):
+        # track processed files
+        self.processed_entries = set() 
+        self.usage_data = []
 
     def get_jsonl_files(self, data_path: Optional[str] = None) -> List[str]:
         """Gets the path of jsonl files relating to the current project
@@ -108,7 +112,6 @@ class LogReader:
             List of objects of data class that contains input and output tokens
         """
         jsonl_files_path = self.get_jsonl_files()
-        usage_data_arr = []
         for json_file in jsonl_files_path:
             with open(json_file, encoding='utf-8') as f:
                 for line in f:
@@ -121,11 +124,20 @@ class LogReader:
                         data = json.loads(line)
                         message = data.get("message")
                         if isinstance(message, dict):
+                            # uniquely identify each request within each message
+                            message_id = message.get("id")
+                            request_id = data.get("requestId")
+                            unique_id = f"{message_id}:{request_id}"
+
+                            if unique_id in self.processed_entries: continue
+
                             model = message.get("model")
                             usage = message.get("usage")
                             if isinstance(usage, dict):
+                                print()
                                 input_tokens = usage.get("input_tokens")
                                 output_tokens = usage.get("output_tokens")
+
                                 # calculate dollar cost
                                 input_tokens_cost = _input_cost_usd(model, input_tokens)
                                 output_tokens_cost = _output_cost_usd(model, output_tokens)
@@ -136,5 +148,6 @@ class LogReader:
                                     output_tokens=output_tokens,
                                     output_tokens_cost=output_tokens_cost
                                     )
-                                usage_data_arr.append(user_usage)
-        return usage_data_arr
+                                self.usage_data.append(user_usage)
+                            self.processed_entries.add(unique_id)
+        return self.usage_data

@@ -111,10 +111,16 @@ class LogReader:
 
             Returns:
                 Array of jsonl file paths
+
+            Raises:
+                FileNotFoundError: if Claude project directory doesn't exist
         """
         data_path = Path(data_path if data_path else "~/.claude/projects").expanduser()
-        if not data_path:
-            return []
+        
+        if not data_path.exists():
+            raise FileNotFoundError(
+                f"Claude projects directory not found at {data_path}"
+            )
         # if path exists read the relevant jsonl files
         return list(data_path.rglob("*.jsonl"))
     

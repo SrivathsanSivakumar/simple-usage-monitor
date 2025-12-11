@@ -12,7 +12,8 @@ def main():
     CLAUDE_BIN = shutil.which('claude')
     if not CLAUDE_BIN:
         print("Error: Claude Code not found. Please install it or point CLAUDE_BIN at correct path")
-        
+        return
+    
     p = pexpect.spawn(CLAUDE_BIN, encoding='utf-8')
     log_reader = LogReader()
     th = TerminalHandler(log_reader=log_reader, pexpect_obj=p)

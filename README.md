@@ -1,23 +1,36 @@
 # simple-usage-monitor
-### CLI Tool - real-time token and cost estimator that lives in your terminal for Claude Code
+## CLI Tool - real-time token and cost estimator that lives in your terminal for Claude Code
 
-- Know your token and dollar cost in __real-time__ as your type your prompts, in the same terminal, so you know how many tokens and associated cost your input uses
-- Tool seamlessly integrates with Claude Code with no additional setup needed! Just install and run `sumonitor` from anywhere to start. The tool will automatically start Claude Code for you along with the overlay
-- Your sessions are fully private. simple-usage-monitor does not store or log any data from any sessions.
+- Know your token and dollar cost in __real-time__ as your type your prompts, in the same terminal, so you know how many tokens and associated cost your input uses.
+- Tool seamlessly integrates with Claude Code with no additional setup needed! Just install and run `sumonitor` from anywhere to start. The tool will automatically start Claude Code for you along with the overlay.
+- Your sessions are fully private. All the processing happens locally on your device.
 
-# Installation
-Clone the repo
+### Supported Models
+1. Opus 4.5
+2. Sonnet 4.5
+3. Haiku 4.5
 
-`git clone https://github.com/SrivathsanSivakumar/simple-usage-monitor`
+Other models will still have accurate token counting, just not dollar cost.
 
-Then install the tool
+## Setup
 
-`cd path/to/simple-usage-monitor`
+### Installation
+
+1. Clone the repo
+
+    `git clone https://github.com/SrivathsanSivakumar/simple-usage-monitor`
+
+2. Then install the tool
+
+    `cd path/to/simple-usage-monitor`
  
- `pip install -e .`
+    `pip install -e .`
 
- Then run the tool from anywhere by calling `sumonitor` on your terminal
+Then run the tool from anywhere by calling `sumonitor` on your terminal
 
-# Contributions
+### Uninstallation
+1. 
+
+## Contributions
 Open for contributions! Take a look at issues to get started.
 

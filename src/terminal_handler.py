@@ -1,6 +1,7 @@
 ### Manages the terminal and displays usage data for current session
 
 import os, sys, fcntl, termios, struct
+import time
 
 from data.log_reader import LogReader
 sys.path.insert(1, os.path.join(sys.path[0], ''))
@@ -72,24 +73,25 @@ class TerminalHandler:
         ### ref https://stackoverflow.com/questions/11023929/using-the-alternate-screen-in-a-bash-script
         ### ref https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
-        text = self.get_overlay_data()
+        while not self.p.closed:
+            text = self.get_overlay_data()
 
-        # get terminal dimensions to get to last row
-        rows, cols = self.get_terminal_size()
+            # get terminal dimensions to get to last row
+            rows, cols = self.get_terminal_size()
 
-        if text:
-            text = text[:cols]
+            if text:
+                text = text[:cols]
 
-            # cursor manipulation and adding text
-            overlay_bytes = (
-                # b'\x1b[0J' +
-                '\x1b[s'             # save cursor position
-                f'\x1b[{rows};1H' +  # move to last row
-                '\x1b[K' +           # clear the entire line
-                text +               # write the text onto the line
-                '\x1b[u'             # move cursor to saved position
-            )
-            sys.stdout.write(overlay_bytes)
-            sys.stdout.flush()
+                # cursor manipulation and adding text
+                overlay_bytes = (
+                    # b'\x1b[0J' +
+                    '\x1b[s'             # save cursor position
+                    f'\x1b[{rows};1H' +  # move to last row
+                    '\x1b[K' +           # clear the entire line
+                    text +               # write the text onto the line
+                    '\x1b[u'             # move cursor to saved position
+                )
+                sys.stdout.write(overlay_bytes)
+                sys.stdout.flush()
 
-        threading.Timer(0.75, self.draw_overlay).start()
+            time.sleep(0.75)

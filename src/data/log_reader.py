@@ -49,9 +49,9 @@ def _input_cost_usd(model: str, tokens:int) -> tuple:
         rate = OPUS_INPUT_PRICE
         tier = "flat"
 
-    else: 
-        return ()
-        
+    else:
+        return (0.0, "unknown")
+
     return (tokens/1_000_000)*rate, tier
 
 def _output_cost_usd(model:str, tokens:int) -> tuple:
@@ -82,10 +82,10 @@ def _output_cost_usd(model:str, tokens:int) -> tuple:
     elif "opus-4-5" in model:
         rate = OPUS_OUTPUT_PRICE
         tier = "flat"
-        
-    else: 
-        return ()
-        
+
+    else:
+        return (0.0, "unknown")
+
     return (tokens/1_000_000)*rate, tier
 
 @dataclass
@@ -103,6 +103,7 @@ class LogReader:
         # track processed files
         self.processed_entries = set() 
         self.usage_data = []
+        self.session_start_time = None
 
     def get_jsonl_files(self, data_path: Optional[str] = None) -> List[str]:
         """Gets the path of jsonl files relating to the current project
@@ -127,7 +128,7 @@ class LogReader:
 
     def parse_json_files(self, hours_back: int = 5) -> List[UsageData]:
         """Parse relevant files only and return a collection of input and output tokens
-    
+
             Args:
                 hours_back: length of a single session in claude
 
@@ -170,8 +171,6 @@ class LogReader:
                                 input_tokens = usage.get("input_tokens")
                                 output_tokens = usage.get("output_tokens")
 
-
-                                # calculate dollar cost
                                 input_tokens_cost = _input_cost_usd(model, input_tokens)
                                 output_tokens_cost = _output_cost_usd(model, output_tokens)
                                 user_usage = UsageData(
@@ -184,4 +183,21 @@ class LogReader:
                                     )
                                 self.usage_data.append(user_usage)
                             self.processed_entries.add(unique_id)
+
+        if self.usage_data:
+            if self.session_start_time is None:
+                oldest = min(self.usage_data, key=lambda e: e.timestamp)
+                self.session_start_time = oldest.timestamp
+
+            session_end_time = self.session_start_time + timedelta(hours=hours_back)
+
+            # find entries beyond current session
+            entries_in_new_session = [e for e in self.usage_data if e.timestamp > session_end_time]
+            
+            if entries_in_new_session:
+                new_session_earliest = min(entries_in_new_session, key=lambda e: e.timestamp)
+                earliest = new_session_earliest.timestamp
+                self.usage_data = entries_in_new_session # keep only new session usage data
+                self.session_start_time = earliest
+
         return self.usage_data

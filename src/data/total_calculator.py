@@ -17,6 +17,6 @@ class TotalCalculator:
                 total of input tokens, input tokens cost, output tokens and output tokens cost
         """
         current_session = self.session_tracker.get_current_session()
-        if not current_session: return (0, 0.0, 0, 0.0)
+        if not current_session: return ((0, 0.0), (0, 0.0), (0, 0.0))
         # print(current_session.total_input_usage, current_session.total_output_usage, current_session.total_tokens)
         return (current_session.total_input_usage, current_session.total_output_usage, current_session.total_tokens)

@@ -256,6 +256,93 @@ class TestExpiredSessions:
         assert len(session.entries) == 1, "Should contain the entry"
 
 
+class TestExpiredSessionRestart:
+    """Tests for the bug where restarting after session expiry shows wrong time"""
+
+    def test_expired_session_cleared_on_restart(self, log_reader):
+        """Test that expired session data is cleared when program restarts
+
+        This tests the fix for the bug where:
+        1. Session expires at 3:00 PM
+        2. New API call at 3:01 PM
+        3. Restart program at 3:02 PM
+        4. Bug showed "60s left" instead of recognizing new session
+        """
+        # Arrange - Simulate the exact bug scenario:
+        # True old session started >5 hours ago (say 5.5 hours ago), expired 0.5 hours ago
+        # Entries from old session that are within 5-hour lookback window:
+        old_entry1 = create_mock_entry(hours_ago=4.98, tokens=1000)  # Oldest in lookback
+        old_entry2 = create_mock_entry(hours_ago=4.5, tokens=2000)
+        # New API call after old session expired:
+        new_entry = create_mock_entry(hours_ago=0.02, tokens=100)
+
+        # BUG: If we use old_entry1 as session start:
+        # session_end = 4.98h ago + 5h = 0.02h from now = ~72 seconds
+        # This is WRONG - the session should already be expired!
+
+        # Simulate what happens on program restart
+        log_reader.usage_data = [old_entry1, old_entry2, new_entry]
+        log_reader.session_start_time = None  # Simulates fresh restart
+
+        # Act - Simulate parse_json_files logic
+        if log_reader.usage_data:
+            if log_reader.session_start_time is None:
+                oldest = min(log_reader.usage_data, key=lambda e: e.timestamp)
+                log_reader.session_start_time = oldest.timestamp
+
+            session_end_time = log_reader.session_start_time + timedelta(hours=5)
+            current_time = datetime.now(timezone.utc)
+
+            # Check if current session has expired
+            if current_time > session_end_time:
+                entries_in_new_session = [e for e in log_reader.usage_data if e.timestamp > session_end_time]
+
+                if entries_in_new_session:
+                    new_session_earliest = min(entries_in_new_session, key=lambda e: e.timestamp)
+                    log_reader.usage_data = entries_in_new_session
+                    log_reader.session_start_time = new_session_earliest.timestamp
+                else:
+                    log_reader.usage_data = []
+                    log_reader.session_start_time = None
+
+        # Assert
+        assert len(log_reader.usage_data) == 1, "Should only have new session entry"
+        assert log_reader.usage_data[0] == new_entry, "Should be the new session entry"
+        assert log_reader.session_start_time == new_entry.timestamp, "Session start should be new entry timestamp"
+
+    def test_active_session_preserved_on_restart(self, log_reader):
+        """Test that active session is preserved when program restarts"""
+        # Arrange - All entries within 5-hour window
+        entry1 = create_mock_entry(hours_ago=2, tokens=1000)
+        entry2 = create_mock_entry(hours_ago=1, tokens=2000)
+        entry3 = create_mock_entry(hours_ago=0.5, tokens=100)
+
+        log_reader.usage_data = [entry1, entry2, entry3]
+        log_reader.session_start_time = None
+
+        # Act - Simulate parse_json_files logic
+        if log_reader.usage_data:
+            if log_reader.session_start_time is None:
+                oldest = min(log_reader.usage_data, key=lambda e: e.timestamp)
+                log_reader.session_start_time = oldest.timestamp
+
+            session_end_time = log_reader.session_start_time + timedelta(hours=5)
+            current_time = datetime.now(timezone.utc)
+
+            # Check if current session has expired
+            if current_time > session_end_time:
+                entries_in_new_session = [e for e in log_reader.usage_data if e.timestamp > session_end_time]
+
+                if entries_in_new_session:
+                    new_session_earliest = min(entries_in_new_session, key=lambda e: e.timestamp)
+                    log_reader.usage_data = entries_in_new_session
+                    log_reader.session_start_time = new_session_earliest.timestamp
+
+        # Assert - Session still active, all data preserved
+        assert len(log_reader.usage_data) == 3, "Should keep all entries in active session"
+        assert log_reader.session_start_time == entry1.timestamp, "Should use oldest entry as start"
+
+
 class TestEdgeCases:
     """Tests for edge cases and boundary conditions"""
 

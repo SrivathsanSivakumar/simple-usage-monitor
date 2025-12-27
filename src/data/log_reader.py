@@ -183,25 +183,4 @@ class LogReader:
                                     )
                                 self.usage_data.append(user_usage)
                             self.processed_entries.add(unique_id)
-
-        if self.usage_data:
-            if self.session_start_time is None:
-                oldest = min(self.usage_data, key=lambda e: e.timestamp)
-                self.session_start_time = oldest.timestamp
-
-            session_end_time = self.session_start_time + timedelta(hours=hours_back)
-            current_time = datetime.now(timezone.utc)
-
-            # find entries beyond current session
-            entries_in_new_session = [e for e in self.usage_data if e.timestamp > session_end_time]
-
-            if entries_in_new_session:
-                new_session_earliest = min(entries_in_new_session, key=lambda e: e.timestamp)
-                self.usage_data = entries_in_new_session # keep only new session usage data
-                self.session_start_time = new_session_earliest.timestamp
-            elif current_time > session_end_time:
-                # Session expired but no new entries - clear everything
-                self.usage_data = []
-                self.session_start_time = None
-
         return self.usage_data

@@ -126,11 +126,11 @@ class LogReader:
         return list(data_path.rglob("*.jsonl"))
     
 
-    def parse_json_files(self, hours_back: int = 5) -> List[UsageData]:
+    def parse_json_files(self, hours_back: int = 120) -> List[UsageData]:
         """Parse relevant files only and return a collection of input and output tokens
 
             Args:
-                hours_back: length of a single session in claude
+                hours_back: how far back to look for entries (default: 120 hours = 5 days)
 
             Returns:
                 List of objects of data class that contains input and output tokens
@@ -190,14 +190,18 @@ class LogReader:
                 self.session_start_time = oldest.timestamp
 
             session_end_time = self.session_start_time + timedelta(hours=hours_back)
+            current_time = datetime.now(timezone.utc)
 
             # find entries beyond current session
             entries_in_new_session = [e for e in self.usage_data if e.timestamp > session_end_time]
-            
+
             if entries_in_new_session:
                 new_session_earliest = min(entries_in_new_session, key=lambda e: e.timestamp)
-                earliest = new_session_earliest.timestamp
                 self.usage_data = entries_in_new_session # keep only new session usage data
-                self.session_start_time = earliest
+                self.session_start_time = new_session_earliest.timestamp
+            elif current_time > session_end_time:
+                # Session expired but no new entries - clear everything
+                self.usage_data = []
+                self.session_start_time = None
 
         return self.usage_data

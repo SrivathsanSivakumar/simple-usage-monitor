@@ -3,16 +3,19 @@
 import datetime
 from typing import List
 from data.log_reader import UsageData
+from data.pricing import _get_plan_limits
 from session.session_tracker import SessionTracker
 from datetime import datetime, timezone
 
 class SessionData:
     """Calculates total usage data along with session relevant data like time left before reset"""
-    def __init__(self, usage_data: List[UsageData]):
+    def __init__(self, usage_data: List[UsageData], plan: str):
+        self.plan_limits = _get_plan_limits(plan)
+
         self.session_tracker = SessionTracker()
         self.session_tracker.build_sessions(usage_data)
         self.current_session = self.session_tracker.get_current_session()
-
+        
     def total_tokens(self) -> int:
         """Read relevant metrics from UsageData and add the values to sum totals
 
@@ -60,3 +63,4 @@ class SessionData:
         if self.current_session is None:
             return 0.0
         return self.current_session.total_costs
+    

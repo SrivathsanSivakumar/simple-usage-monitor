@@ -6,7 +6,7 @@ import time
 from data.log_reader import LogReader
 sys.path.insert(1, os.path.join(sys.path[0], ''))
 import threading
-from data.session_data import SessionData
+from session.session_data import SessionData
 
 class TerminalHandler:
     """Handler for managing terminal and drawing overlays"""
@@ -46,8 +46,9 @@ class TerminalHandler:
                 Formatted string that contains (Model | Input tokens, cost | Output tokens, cost)
         """
         usage_data = self.log_reader.parse_json_files()
-        session_data = SessionData(usage_data=usage_data)
+        session_data = SessionData(usage_data=usage_data, plan="pro")
 
+        plan_limits = session_data.plan_limits
         total_tokens = session_data.total_tokens()
         session_end = session_data.session_reset_time()
         session_messages = session_data.session_messages()
@@ -55,10 +56,10 @@ class TerminalHandler:
 
         if usage_data:
             return (
-                f"Tokens: {total_tokens} | " +
+                f"Tokens: {total_tokens}/{plan_limits.tokens} | " +
                 f"Session reset in: {session_end} | " +
-                f"Messages: {session_messages} | " +
-                f"Cost: {total_cost:.2f} $"
+                f"Messages: {session_messages}/{plan_limits.messages} | " +
+                f"Cost: {total_cost:.2f}/{plan_limits.cost} $"
             )
         return ""
         
@@ -97,4 +98,4 @@ class TerminalHandler:
                 sys.stdout.write(overlay_bytes)
                 sys.stdout.flush()
 
-            time.sleep(0.75)
+            time.sleep(2.0) # read logs every other second

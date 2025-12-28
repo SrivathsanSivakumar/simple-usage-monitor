@@ -76,3 +76,46 @@ def _get_pricing(model: str) -> ModelPricing:
         cache_read=0.0,
         tiered=False
     )
+
+# Ref: https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor
+@dataclass
+class PlanLimits:
+    """Session limits for Claude Code subscription plans (per 5-hour window)"""
+    tokens: int
+    cost: float
+    messages: int
+
+PRO = PlanLimits(
+    tokens=19_000,
+    cost=18.00,
+    messages=250
+)
+
+MAX5 = PlanLimits(
+    tokens=88_000,
+    cost=35.00,
+    messages=1000
+)
+
+MAX20 = PlanLimits(
+    tokens=220_000,
+    cost=140.00,
+    messages=2000
+)
+
+PLAN_LIMITS: Dict[str, PlanLimits] = {
+    "pro": PRO,
+    "max5": MAX5,
+    "max20": MAX20
+}
+
+def _get_plan_limits(plan: str) -> PlanLimits:
+    """Get limits for a subscription plan
+
+        Args:
+            plan: Plan name ('pro', 'max5', or 'max20')
+
+        Returns:
+            PlanLimits for the specified plan (defaults to Pro if unknown)
+    """
+    return PLAN_LIMITS.get(plan.lower(), PRO)

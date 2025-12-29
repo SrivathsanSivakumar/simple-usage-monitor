@@ -11,10 +11,11 @@ from session.session_data import SessionData
 class TerminalHandler:
     """Handler for managing terminal and drawing overlays"""
     
-    def __init__(self, log_reader: LogReader, pexpect_obj) -> None:
-        self.in_alt_screen = False # to know when to draw in terminal        
+    def __init__(self, log_reader: LogReader, pexpect_obj, plan: str = "pro") -> None:
+        self.in_alt_screen = False # to know when to draw in terminal
         self.p = pexpect_obj
         self.log_reader = log_reader
+        self.plan = plan
         self.overlay_thread = threading.Thread(target=self.draw_overlay, daemon=True)
         self.overlay_thread.start()
 
@@ -46,7 +47,7 @@ class TerminalHandler:
                 Formatted string that contains (Model | Input tokens, cost | Output tokens, cost)
         """
         usage_data = self.log_reader.parse_json_files()
-        session_data = SessionData(usage_data=usage_data, plan="pro")
+        session_data = SessionData(usage_data=usage_data, plan=self.plan)
 
         plan_limits = session_data.plan_limits
         total_tokens = session_data.total_tokens()

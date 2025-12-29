@@ -103,51 +103,54 @@ class LogReader:
                     if not line:
                         continue
 
-                    else:
+                    try:
                         data = json.loads(line)
-                        message = data.get("message")
-                        timestamp = data.get("timestamp")
+                    except json.JSONDecodeError:
+                        continue
 
-                        if not timestamp: 
-                            continue
+                    message = data.get("message")
+                    timestamp = data.get("timestamp")
 
-                        timestamp = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
-                        if timestamp < cutoff_time:
-                            continue
+                    if not timestamp: 
+                        continue
 
-                        if isinstance(message, dict):
-                            # uniquely identify each request within each message
-                            message_id = message.get("id")
-                            request_id = data.get("requestId")
-                            unique_id = f"{message_id}:{request_id}"
+                    timestamp = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                    if timestamp < cutoff_time:
+                        continue
 
-                            if unique_id in self.processed_entries: continue
+                    if isinstance(message, dict):
+                        # uniquely identify each request within each message
+                        message_id = message.get("id")
+                        request_id = data.get("requestId")
+                        unique_id = f"{message_id}:{request_id}"
 
-                            model = message.get("model")
-                            usage = message.get("usage")
-                            if isinstance(usage, dict):
-                                input_tokens = usage.get("input_tokens", 0)
-                                output_tokens = usage.get("output_tokens", 0)
-                                cache_write_tokens = usage.get("cache_creation_input_tokens", 0)
-                                cache_read_tokens = usage.get("cache_read_input_tokens", 0)
+                        if unique_id in self.processed_entries: continue
 
-                                total_cost = _calculate_total_cost(
-                                    model=model,
-                                    input_tokens=input_tokens,
-                                    output_tokens=output_tokens,
-                                    cache_write_tokens=cache_write_tokens,
-                                    cache_read_tokens=cache_read_tokens,
+                        model = message.get("model")
+                        usage = message.get("usage")
+                        if isinstance(usage, dict):
+                            input_tokens = usage.get("input_tokens", 0)
+                            output_tokens = usage.get("output_tokens", 0)
+                            cache_write_tokens = usage.get("cache_creation_input_tokens", 0)
+                            cache_read_tokens = usage.get("cache_read_input_tokens", 0)
+
+                            total_cost = _calculate_total_cost(
+                                model=model,
+                                input_tokens=input_tokens,
+                                output_tokens=output_tokens,
+                                cache_write_tokens=cache_write_tokens,
+                                cache_read_tokens=cache_read_tokens,
+                            )
+
+                            user_usage = UsageData(
+                                model=model,
+                                input_tokens=input_tokens,
+                                output_tokens=output_tokens,
+                                cache_write_tokens=cache_write_tokens,
+                                cache_read_tokens=cache_read_tokens,
+                                cost=total_cost,
+                                timestamp=timestamp
                                 )
-
-                                user_usage = UsageData(
-                                    model=model,
-                                    input_tokens=input_tokens,
-                                    output_tokens=output_tokens,
-                                    cache_write_tokens=cache_write_tokens,
-                                    cache_read_tokens=cache_read_tokens,
-                                    cost=total_cost,
-                                    timestamp=timestamp
-                                    )
-                                self.usage_data.append(user_usage)
-                            self.processed_entries.add(unique_id)
+                            self.usage_data.append(user_usage)
+                        self.processed_entries.add(unique_id)
         return self.usage_data

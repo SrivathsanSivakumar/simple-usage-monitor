@@ -6,11 +6,22 @@ build-backend = "setuptools.build_meta"
 name = "sumonitor"
 version = "0.1.0"
 dependencies = [
-  "pexpect"
+  "pexpect",
+  "numpy"
 ]
 requires-python = ">=3.10"
 description = "CLI AI Agent wrapper with token and cost tracking"
 license = "MIT"
+
+[project.optional-dependencies]
+test = [
+  "pytest>=9.0.0",
+  "pytest-cov>=5.0.0",
+  "pytest-mock>=3.14.0",
+  "pytest-timeout>=2.3.0",
+  "freezegun>=1.5.0",
+  "pytest-xdist>=3.6.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

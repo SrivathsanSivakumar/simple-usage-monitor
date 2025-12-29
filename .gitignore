@@ -215,3 +215,4 @@ npm-debug.log
 tokens/node_modules
 
 tmp
+debug

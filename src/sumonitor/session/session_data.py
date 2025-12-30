@@ -2,9 +2,9 @@
 
 import datetime
 from typing import List
-from data.log_reader import UsageData
-from data.pricing import _get_plan_limits
-from session.session_tracker import SessionTracker
+from sumonitor.data.log_reader import UsageData
+from sumonitor.data.pricing import _get_plan_limits
+from sumonitor.session.session_tracker import SessionTracker
 from datetime import datetime, timezone
 
 class SessionData:

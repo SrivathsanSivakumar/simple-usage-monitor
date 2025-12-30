@@ -2,14 +2,10 @@
 
 import pytest
 import json
-import sys
-from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from unittest.mock import patch, MagicMock
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from data.log_reader import LogReader, UsageData, _calculate_total_cost
+from sumonitor.data.log_reader import LogReader, UsageData, _calculate_total_cost
 
 
 class TestCostCalculation:

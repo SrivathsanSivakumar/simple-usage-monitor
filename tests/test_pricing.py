@@ -1,13 +1,9 @@
 """Tests for pricing.py - Model pricing and plan limits"""
 
 import pytest
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from data.pricing import _get_pricing, _get_plan_limits
-from data.log_reader import _calculate_total_cost
+from sumonitor.data.pricing import _get_pricing, _get_plan_limits
+from sumonitor.data.log_reader import _calculate_total_cost
 
 
 class TestModelPricingLookup:

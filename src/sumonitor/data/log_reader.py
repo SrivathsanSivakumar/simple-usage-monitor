@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
-from data.pricing import _get_pricing
+from sumonitor.data.pricing import _get_pricing
 from dataclasses import dataclass
 
 def _calculate_total_cost(model: str, input_tokens: int, output_tokens: int,

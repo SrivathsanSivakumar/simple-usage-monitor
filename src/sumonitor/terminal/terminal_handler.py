@@ -1,12 +1,10 @@
 ### Manages the terminal and displays usage data for current session
 
-import os, sys, fcntl, termios, struct
-import time
+import sys, fcntl, termios, struct
+import time, threading
 
-from data.log_reader import LogReader
-sys.path.insert(1, os.path.join(sys.path[0], ''))
-import threading
-from session.session_data import SessionData
+from ..data.log_reader import LogReader
+from ..session.session_data import SessionData
 
 class TerminalHandler:
     """Handler for managing terminal and drawing overlays"""

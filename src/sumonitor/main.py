@@ -2,11 +2,10 @@
 
 ### Entry point. init pexpect and transfer control to claude
 
-import shutil, pexpect, os, sys, signal, argparse
-sys.path.insert(1, os.path.join(sys.path[0], ''))
-from data.log_reader import LogReader
-from session.session_data import SessionData
-from terminal.terminal_handler import TerminalHandler
+import shutil, pexpect, signal, argparse
+from .data.log_reader import LogReader
+from .session.session_data import SessionData
+from .terminal.terminal_handler import TerminalHandler
 
 def get_args_parser():
     parser = argparse.ArgumentParser(

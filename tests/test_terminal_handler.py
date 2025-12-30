@@ -1,17 +1,13 @@
 """Tests for terminal_handler.py - Terminal rendering and overlay management"""
 
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import Mock, MagicMock, patch
 import struct
 import threading
 import time
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from terminal.terminal_handler import TerminalHandler
-from data.log_reader import LogReader
+from sumonitor.terminal.terminal_handler import TerminalHandler
+from sumonitor.data.log_reader import LogReader
 
 
 class TestTerminalSize:

@@ -1,15 +1,11 @@
 """Tests for session_data.py - Session metrics calculation and formatting"""
 
 import pytest
-import sys
-from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from freezegun import freeze_time
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from session.session_data import SessionData
-from data.pricing import PlanLimits
+from sumonitor.session.session_data import SessionData
+from sumonitor.data.pricing import PlanLimits
 
 
 class TestInitialization:

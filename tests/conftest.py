@@ -1,17 +1,12 @@
 """Shared pytest fixtures and configuration for all tests"""
 
 import pytest
-import sys
 from datetime import datetime, timezone, timedelta
-from pathlib import Path
 from unittest.mock import Mock, MagicMock
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from data.log_reader import UsageData, LogReader
-from session.session_tracker import SessionTracker, Session
-from data.pricing import PlanLimits, ModelPricing
+from sumonitor.data.log_reader import UsageData, LogReader
+from sumonitor.session.session_tracker import SessionTracker, Session
+from sumonitor.data.pricing import PlanLimits, ModelPricing
 
 
 @pytest.fixture

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
-from data.log_reader import UsageData
+from sumonitor.data.log_reader import UsageData
 
 @dataclass
 class Session:

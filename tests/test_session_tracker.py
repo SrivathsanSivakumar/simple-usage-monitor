@@ -1,14 +1,10 @@
 """Tests for session_tracker.py - Session building, windowing, and aggregation"""
 
 import pytest
-import sys
-from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from session.session_tracker import SessionTracker, Session
-from data.log_reader import UsageData
+from sumonitor.session.session_tracker import SessionTracker, Session
+from sumonitor.data.log_reader import UsageData
 
 
 class TestSessionBuilding:

@@ -217,9 +217,9 @@ def calculate_cost(
 
 ### File Organization
 
-- `src/data/` - Data processing and log reading
-- `src/session/` - Session tracking and management
-- `src/terminal/` - Terminal UI and overlay
+- `src/sumonitor/data/` - Data processing and log reading
+- `src/sumonitor/session/` - Session tracking and management
+- `src/sumonitor/terminal/` - Terminal UI and overlay
 - `tests/` - Test files mirroring src structure
 
 ## Submitting Changes

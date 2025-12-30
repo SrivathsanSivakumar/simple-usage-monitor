@@ -1,10 +1,10 @@
 # simple-usage-monitor
 
 [![PyPI version](https://img.shields.io/pypi/v/sumonitor)](https://pypi.org/project/sumonitor/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/sumonitor)](https://pypi.org/project/sumonitor/)
 [![License](https://img.shields.io/pypi/l/sumonitor)](https://github.com/SrivathsanSivakumar/simple-usage-monitor/blob/main/LICENSE)
 [![codecov](https://codecov.io/gh/SrivathsanSivakumar/simple-usage-monitor/graph/badge.svg)](https://codecov.io/gh/SrivathsanSivakumar/simple-usage-monitor)
-
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ## In-terminal (HUD) usage monitoring for Claude Code - see your costs without leaving your workflow
 

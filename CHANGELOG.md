@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-01-XX
+## [0.1.0] - 2025-12-30
 
 ### Added
 - Initial release of Simple Usage Monitor
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Command-line arguments: `--plan`, `--path`, `--version`
 - Auto-detection of Claude Code installation
 - Privacy-first local processing (no external API calls)
-- Comprehensive test suite with 91% coverage (134 tests)
+- Comprehensive test suite with 92% coverage (134 tests)
 - PyPI package distribution
 
 ### Features
@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Technical Details
 - Python 3.8+ support
-- Dependencies: pexpect, numpy
+- Dependencies: pexpect
 - Built with setuptools
 - Type hints throughout codebase
 - Dataclass-based models

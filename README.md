@@ -30,10 +30,9 @@ Other models will still have accurate token counting, just not dollar cost.
     `git clone https://github.com/SrivathsanSivakumar/simple-usage-monitor`
 
 2. Then install the tool
-
     `cd path/to/simple-usage-monitor`
  
-    `pip install -e .`
+    `pip install .`
 
 ### Uninstallation
 `pip uninstall sumonitor`

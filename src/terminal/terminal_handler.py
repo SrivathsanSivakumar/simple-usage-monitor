@@ -99,4 +99,4 @@ class TerminalHandler:
                 sys.stdout.write(overlay_bytes)
                 sys.stdout.flush()
 
-            time.sleep(2.0) # read logs every other second
+            time.sleep(1.0) # read logs every other second

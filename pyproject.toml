@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sumonitor"
-version = "0.1.0"
+version = "0.1.1"
 description = "Real-time token and cost monitoring overlay for Claude Code CLI with session tracking"
 readme = "README.md"
 license = { text = "MIT" }

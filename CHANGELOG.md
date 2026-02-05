@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-02-05
+
+### Added
+- Config persistence - CLI flags '--plan' and '--path' are now saved automatically and remembered across sessions
+
+### Fixed
+- Fixed stale hardcoded timestamps in test suite that caused CI failures
+
 ## [0.1.0] - 2025-12-30
 
 ### Added

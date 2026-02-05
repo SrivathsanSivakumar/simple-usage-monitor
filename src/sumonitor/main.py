@@ -12,7 +12,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser(
         prog='sumonitor',
         description='Real-time token and cost monitoring for Claude Code CLI')
-    parser.add_argument('--version', action='version', version='%(prog)s 0.1.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.1.1')
     parser.add_argument('--path', default=shutil.which('claude'), type=str,
                         help='Path to Claude Code installation (default: auto-detect with which)')
     parser.add_argument('--plan', default='pro', type=str, choices=['pro', 'max5', 'max20'],

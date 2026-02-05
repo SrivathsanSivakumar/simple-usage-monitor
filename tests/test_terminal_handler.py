@@ -12,7 +12,7 @@ from sumonitor.data.log_reader import LogReader
 
 class TestTerminalSize:
     """Test get_terminal_size() system call"""
-
+    # mocker is automatically injected by pytest when you include it as a parameter
     def test_returns_rows_and_cols(self, mocker):
         """Should return terminal dimensions via ioctl"""
         mock_pexpect = Mock()

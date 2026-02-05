@@ -109,3 +109,10 @@ def session_tracker():
         SessionTracker instance with empty sessions list
     """
     return SessionTracker()
+
+@pytest.fixture
+def config(tmp_path):
+    from sumonitor.config import Config
+    c = Config()
+    c.path = str(tmp_path/"config.json")
+    return c

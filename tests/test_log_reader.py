@@ -79,7 +79,7 @@ class TestJSONLParsing:
         """Should successfully parse well-formed JSONL with usage data"""
         jsonl_file = temp_jsonl_dir / "test.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -135,7 +135,7 @@ class TestJSONLParsing:
         """Entry without usage dict should be skipped"""
         jsonl_file = temp_jsonl_dir / "no_usage.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5"
@@ -154,7 +154,7 @@ class TestJSONLParsing:
         """Timestamp with Z should be converted to UTC timezone"""
         jsonl_file = temp_jsonl_dir / "z_suffix.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00.123Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -174,7 +174,7 @@ class TestJSONLParsing:
         """Missing cache token fields should default to 0"""
         jsonl_file = temp_jsonl_dir / "no_cache.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -202,7 +202,7 @@ class TestDeduplication:
         """Same message_id:requestId should only be counted once"""
         jsonl_file = temp_jsonl_dir / "dup.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -223,7 +223,7 @@ class TestDeduplication:
         """Same message_id but different requestId should both count"""
         jsonl_file = temp_jsonl_dir / "diff_req.jsonl"
         entry1 = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=2)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -232,7 +232,7 @@ class TestDeduplication:
             "requestId": "req_1"
         }
         entry2 = {
-            "timestamp": "2025-12-29T10:01:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -252,7 +252,7 @@ class TestDeduplication:
         """Multiple parse_json_files() calls should maintain deduplication"""
         jsonl_file = temp_jsonl_dir / "multi.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -401,7 +401,7 @@ class TestEdgeCases:
         """Blank lines in JSONL should be skipped"""
         jsonl_file = temp_jsonl_dir / "blanks.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",
@@ -423,7 +423,7 @@ class TestEdgeCases:
         file2 = temp_jsonl_dir / "file2.jsonl"
 
         entry1 = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=2)).isoformat(),
             "message": {
                 "id": "msg_1",
                 "model": "claude-sonnet-4-5",
@@ -432,7 +432,7 @@ class TestEdgeCases:
             "requestId": "req_1"
         }
         entry2 = {
-            "timestamp": "2025-12-29T10:01:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_2",
                 "model": "claude-sonnet-4-5",
@@ -454,7 +454,7 @@ class TestEdgeCases:
         """UsageData should have cost field calculated from tokens"""
         jsonl_file = temp_jsonl_dir / "cost.jsonl"
         entry_data = {
-            "timestamp": "2025-12-29T10:00:00Z",
+            "timestamp": (datetime.now(timezone.utc)-timedelta(hours=1)).isoformat(),
             "message": {
                 "id": "msg_123",
                 "model": "claude-sonnet-4-5",

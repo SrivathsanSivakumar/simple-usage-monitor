@@ -8,23 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.1.3] - 2026-03-18
-- Added guardrails during I/O operations to avoid application crash if Claude changes the files mid-read
+#### Added
+- Guardrails during I/O operations to avoid application crash if Claude changes the files mid-read
+
+#### Fixed
 - Stop writing usage data while Claude is writing to prevent interleaving of texts
 
 ## [0.1.2] - 2026-03-02
-- Added support for Opus 4.6 and Sonnet 4.6 variants.
+#### Added
+- Support for Opus 4.6 and Sonnet 4.6 variants.
 
 ## [0.1.1] - 2026-02-05
 
-### Added
+#### Added
 - Config persistence - CLI flags '--plan' and '--path' are now saved automatically and remembered across sessions
 
-### Fixed
+#### Fixed
 - Fixed stale hardcoded timestamps in test suite that caused CI failures
 
 ## [0.1.0] - 2025-12-30
 
-### Added
+#### Added
 - Initial release of Simple Usage Monitor
 - Real-time token and cost tracking for Claude Code CLI
 - Support for Claude Sonnet 4.5, Opus 4.5, and Haiku 4.5
@@ -40,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive test suite with 92% coverage (134 tests)
 - PyPI package distribution
 
-### Features
+#### Features
 - **Session Management**
   - Automatic session boundary detection
   - Support for multiple concurrent sessions
@@ -59,14 +63,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Clean, readable format
   - Responsive to terminal size changes
 
-### Documentation
+#### Documentation
 - Comprehensive README with usage examples
 - Contributing guidelines
 - Code of Conduct
 - MIT License
 - Issue templates for bugs and feature requests
 
-### Technical Details
+#### Technical Details
 - Python 3.8+ support
 - Dependencies: pexpect
 - Built with setuptools
@@ -82,22 +86,22 @@ For future releases, use this template:
 ```markdown
 ## [X.Y.Z] - YYYY-MM-DD
 
-### Added
+#### Added
 - New features
 
-### Changed
+#### Changed
 - Changes to existing functionality
 
-### Deprecated
+#### Deprecated
 - Features that will be removed in future versions
 
-### Removed
+#### Removed
 - Features that have been removed
 
-### Fixed
+#### Fixed
 - Bug fixes
 
-### Security
+#### Security
 - Security-related changes
 ```
 
